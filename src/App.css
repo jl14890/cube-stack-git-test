@@ -1,0 +1,53 @@
+@font-face {
+  font-family: 'SpanLight';
+  src: url('./assets/Span/Fontspring-DEMO-span-light.otf') format('truetype'); /* Adjust the path as needed */
+}
+
+* {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: black;
+}
+
+.canvas-container {
+  position: relative;
+}
+
+.text-front {
+  position: absolute; /* overlay text */
+  display: flex; /* Set display to flex */
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 2vw; /* Example font size */
+  font-family: SpanLight;
+  bottom: 20%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+  user-select: none; /* Prevent text selection */
+  pointer-events: none; /* Make the overlay click-through */
+}
+
+.text-behind {
+  position: absolute; /* overlay text */
+  z-index: -1; /* Places the text behind the canvas */
+  display: flex; /* Set display to flex */
+  justify-content: center;
+  align-items:flex-start;
+  font-size: 8vw; /* Example font size */
+  font-family: SpanLight;
+  top: 10%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+  user-select: none; /* Prevent text selection */
+  pointer-events: none; /* Make the overlay click-through */
+  line-height: 100%;
+}
