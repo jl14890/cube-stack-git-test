@@ -1,6 +1,7 @@
 @font-face {
   font-family: 'SpanLight';
-  src: url('./assets/Span/Fontspring-DEMO-span-light.otf') format('truetype'); /* Adjust the path as needed */
+  src: url('./assets/Span/Fontspring-DEMO-span-light.otf') format('truetype');
+  /* Adjust the path as needed */
 }
 
 * {
@@ -11,7 +12,7 @@
 }
 
 body {
-  background-color: black;
+  background-color: rgb(0, 0, 0);
 }
 
 .canvas-container {
@@ -19,35 +20,46 @@ body {
 }
 
 .text-front {
-  position: absolute; /* overlay text */
-  display: flex; /* Set display to flex */
+  position: absolute;
+  display: flex;
   justify-content: center;
-  align-items: flex-end;
-  font-size: 2vw; /* Example font size */
-  font-family: SpanLight;
-  bottom: 20%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  color: white;
-  user-select: none; /* Prevent text selection */
-  pointer-events: none; /* Make the overlay click-through */
+  text-align: center;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 10vw;
+  height: 10vh;
+  font-size: 4vw;
+  cursor: pointer;
+  /* background-color: #000000; */
+  color: #ffffff;
+  user-select: none;
 }
 
 .text-behind {
-  position: absolute; /* overlay text */
-  z-index: -1; /* Places the text behind the canvas */
-  display: flex; /* Set display to flex */
+  position: absolute;
+  /* overlay text */
+  z-index: -1;
+  /* Places the text behind the canvas */
+  display: flex;
+  /* Set display to flex */
   justify-content: center;
-  align-items:flex-start;
-  font-size: 8vw; /* Example font size */
+  align-items: flex-start;
+  font-size: 8vw;
+  /* Example font size */
   font-family: SpanLight;
   top: 10%;
   left: 0;
   width: 100%;
   height: 100%;
   color: white;
-  user-select: none; /* Prevent text selection */
-  pointer-events: none; /* Make the overlay click-through */
+  user-select: none;
   line-height: 100%;
+}
+
+/* Ensure full height for body and html to cover the viewport height */
+html,
+body {
+  height: 100%;
 }

@@ -288,15 +288,12 @@ const App = () => {
 
 
   return (
-    <div onClick={shuffleCubes}>
-      {/* Changed from onClick to onMouseDown */}
-      {/* <div onMouseDown={handleMouseClick}> */}
-
+    <div className="canvas-container">
       <Canvas
         shadows
         gl={{ alpha: true }}
         camera={{ position: [-3, 2, 15], fov: 50 }}>
-
+  
         <OrbitControls
           enablePan={false}
           enableZoom={true}
@@ -304,53 +301,35 @@ const App = () => {
           target={[0, 1, 0]}
         />
         <directionalLight position={[5, 10, 5]} intensity={1} castShadow />
-
-        {/* <Text
-          position={[0, 0, -5]} // Adjust 'z' to position the text behind your meshes
-          fontSize={1}
-          color="white" // Text color
-        >
-          Your Text Here
-        </Text> */}
-
-        {/* {cubes.map((cube, index) => (
-          <Cube
-            key={cube.id}
-            position={calculatePosition(index)}
-            args={[cube.size, cube.size, cube.size]}
-            color={cube.color}
-          />
-        ))} */}
-
-        {/* <CameraFacingText position={[0,5,0]} textContent={"hello"} /> */}
-
         <GLTFController position={[0, cubeAPosition, 0]} />
         <GLTFCig position={[0, cubeBPosition, 0]} />
         <GLTFCham position={[0, cubeCPosition, 0]} />
-
+  
         <Circle
           position={[0, 0, 0]}
           args={[5, 64]}
           color={"white"}
-          metalness={0} // Fully metallic
-          roughness={1} // Quite smooth
+          metalness={0}
+          roughness={1}
         />
-
-        {/* <mesh position={[0, 0.75, 0]}>
-          <boxGeometry args={[1]} />
-          <meshStandardMaterial color={"skyblue"} />
-        </mesh>
-         */}
-
+  
         <Environment
           preset="apartment"
-          // background blur={1}
           background={false} />
       </Canvas>
+  
+      {/* <button className="overlay-button" onClick={(e) => {
+          e.stopPropagation(); // Prevent onClick from triggering on parent div
+          shuffleCubes();
+        }}>
+        Click Me
+      </button> */}
+  
       <div className="text-behind">JOHN LUO<br />PORTRAIT</div>
-      <div className="text-front">CLICK ANYWHERE</div>
+      <div className="text-front" onClick={shuffleCubes}>SHUFFLE</div>
     </div>
   );
+  
 
 };
 
