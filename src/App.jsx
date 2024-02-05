@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Canvas, useThree, useFrame, useLoader, extend } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { Environment, OrbitControls, Text } from '@react-three/drei'
+import { useControls } from 'leva';
 
 import * as THREE from 'three';
 
@@ -36,6 +37,7 @@ whiteMaterial.envMapIntensity = 0.5
 function GLTFController({ position }) {
   const gltf = useLoader(GLTFLoader, new URL('./assets/ps4.glb', import.meta.url).href);
   const originalMaterials = useRef({});
+  const meshRef = useRef();
 
   useEffect(() => {
     gltf.scene.traverse((child) => {
@@ -47,6 +49,13 @@ function GLTFController({ position }) {
     });
   }, [gltf.scene]);
 
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.5; // Adjust rotation speed by changing 0.5
+    }
+  });
+
+  //handling the hover + material change effect
   const handlePointerOver = (e) => {
     e.object.traverse((child) => {
       if (child.isMesh) {
@@ -54,7 +63,6 @@ function GLTFController({ position }) {
       }
     });
   };
-
   const handlePointerOut = (e) => {
     e.object.traverse((child) => {
       if (child.isMesh) {
@@ -63,8 +71,10 @@ function GLTFController({ position }) {
     });
   };
 
+
   return (
     <primitive
+      ref={meshRef}
       object={gltf.scene}
       position={position}
       onPointerOver={handlePointerOver}
@@ -76,6 +86,7 @@ function GLTFController({ position }) {
 function GLTFCig({ position }) {
   const gltf = useLoader(GLTFLoader, new URL('./assets/cig.glb', import.meta.url).href);
   const originalMaterials = useRef({});
+  const meshRef = useRef();
 
   useEffect(() => {
     gltf.scene.traverse((child) => {
@@ -86,6 +97,12 @@ function GLTFCig({ position }) {
       }
     });
   }, [gltf.scene]);
+
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y -= delta * 0.5; // Adjust rotation speed by changing 0.5
+    }
+  });
 
   const handlePointerOver = (e) => {
     e.object.traverse((child) => {
@@ -105,6 +122,7 @@ function GLTFCig({ position }) {
 
   return (
     <primitive
+      ref={meshRef}
       object={gltf.scene}
       position={position}
       onPointerOver={handlePointerOver}
@@ -116,6 +134,7 @@ function GLTFCig({ position }) {
 function GLTFCham({ position }) {
   const gltf = useLoader(GLTFLoader, new URL('./assets/champagne.glb', import.meta.url).href)
   const originalMaterials = useRef({});
+  const meshRef = useRef();
 
   useEffect(() => {
     gltf.scene.traverse((child) => {
@@ -126,6 +145,13 @@ function GLTFCham({ position }) {
       }
     });
   }, [gltf.scene]);
+
+
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.5; // Adjust rotation speed by changing 0.5
+    }
+  });
 
   const handlePointerOver = (e) => {
     e.object.traverse((child) => {
@@ -145,6 +171,7 @@ function GLTFCham({ position }) {
 
   return (
     <primitive
+      ref={meshRef}
       object={gltf.scene}
       position={position}
       onPointerOver={handlePointerOver}
@@ -194,12 +221,21 @@ function GLTFCham({ position }) {
 
 const App = () => {
 
+  const [showCubes, setShowCubes] = useState(true);
+  useControls({
+    'Show Cubes': {
+      value: showCubes,
+      onChange: (value) => setShowCubes(value),
+    },
+  });
+
   //define a cube
   const Cube = ({ position, args, color }) => {
     const meshRef = useRef();
+
     useFrame(() => {
       // meshRef.current.rotation.x += 0.01;
-      // meshRef.current.rotation.y += 0.01;
+      // meshRef.current.rotation.y += 0.001;
     });
     return (
       <mesh position={position} ref={meshRef}>
@@ -208,6 +244,7 @@ const App = () => {
       </mesh>
     );
   };
+
 
   //define a plane
   const Circle = ({ position, args, color, metalness, roughness }) => {
@@ -287,13 +324,14 @@ const App = () => {
   };
 
 
+
   return (
-    <div className="canvas-container">
+    <div>
       <Canvas
         shadows
         gl={{ alpha: true }}
         camera={{ position: [-3, 2, 15], fov: 50 }}>
-  
+
         <OrbitControls
           enablePan={false}
           enableZoom={true}
@@ -301,35 +339,55 @@ const App = () => {
           target={[0, 1, 0]}
         />
         <directionalLight position={[5, 10, 5]} intensity={1} castShadow />
+
+        {/* <Text
+          position={[0, 0, -5]} // Adjust 'z' to position the text behind your meshes
+          fontSize={1}
+          color="white" // Text color
+        >
+          Your Text Here
+        </Text> */}
+
+
+        {/* wire frame cubes */}
+        {showCubes && cubes.map((cube, index) => (
+        <Cube
+          key={cube.id}
+          position={calculatePosition(index)}
+          args={[cube.size, cube.size, cube.size]}
+          color={cube.color}
+        />
+      ))}
+
+        {/* <CameraFacingText position={[0,5,0]} textContent={"hello"} /> */}
+
         <GLTFController position={[0, cubeAPosition, 0]} />
         <GLTFCig position={[0, cubeBPosition, 0]} />
         <GLTFCham position={[0, cubeCPosition, 0]} />
-  
+
         <Circle
           position={[0, 0, 0]}
           args={[5, 64]}
           color={"white"}
-          metalness={0}
-          roughness={1}
+          metalness={0} // Fully metallic
+          roughness={1} // Quite smooth
         />
-  
+
+        {/* <mesh position={[0, 0.75, 0]}>
+          <boxGeometry args={[1]} />
+          <meshStandardMaterial color={"skyblue"} />
+        </mesh>
+         */}
+
         <Environment
           preset="apartment"
+          // background blur={1}
           background={false} />
       </Canvas>
-  
-      {/* <button className="overlay-button" onClick={(e) => {
-          e.stopPropagation(); // Prevent onClick from triggering on parent div
-          shuffleCubes();
-        }}>
-        Click Me
-      </button> */}
-  
       <div className="text-behind">JOHN LUO<br />PORTRAIT</div>
       <div className="text-front" onClick={shuffleCubes}>SHUFFLE</div>
     </div>
   );
-  
 
 };
 
