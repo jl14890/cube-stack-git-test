@@ -221,7 +221,7 @@ function GLTFCham({ position }) {
 
 const App = () => {
 
-  const [showCubes, setShowCubes] = useState(true);
+  const [showCubes, setShowCubes] = useState(false);
   useControls({
     'Show Cubes': {
       value: showCubes,
@@ -326,8 +326,8 @@ const App = () => {
 
 
   return (
-    <div>
-      <Canvas
+    <div className="canvas-container">
+      <Canvas 
         shadows
         gl={{ alpha: true }}
         camera={{ position: [-3, 2, 15], fov: 50 }}>
@@ -340,16 +340,7 @@ const App = () => {
         />
         <directionalLight position={[5, 10, 5]} intensity={1} castShadow />
 
-        {/* <Text
-          position={[0, 0, -5]} // Adjust 'z' to position the text behind your meshes
-          fontSize={1}
-          color="white" // Text color
-        >
-          Your Text Here
-        </Text> */}
 
-
-        {/* wire frame cubes */}
         {showCubes && cubes.map((cube, index) => (
         <Cube
           key={cube.id}
@@ -358,8 +349,6 @@ const App = () => {
           color={cube.color}
         />
       ))}
-
-        {/* <CameraFacingText position={[0,5,0]} textContent={"hello"} /> */}
 
         <GLTFController position={[0, cubeAPosition, 0]} />
         <GLTFCig position={[0, cubeBPosition, 0]} />
@@ -381,7 +370,6 @@ const App = () => {
 
         <Environment
           preset="apartment"
-          // background blur={1}
           background={false} />
       </Canvas>
       <div className="text-behind">JOHN LUO<br />PORTRAIT</div>
